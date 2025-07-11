@@ -6,6 +6,11 @@
   --background: #ffffff;
   --foreground: #171717;
 }
+/* globals.css অথবা যেকোনো প্রযোজ্য CSS ফাইলে */
+.ql-editor {
+  direction: ltr !important;
+  text-align: left !important;
+}
 
 @theme inline {
   --color-background: var(--background);

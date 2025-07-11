@@ -13,7 +13,7 @@ export default function AdminLayout({ children }) {
     <div className="flex min-h-screen">
       {/* বাম পাশের মেনু */}
       <aside className="w-64 bg-blue-800 text-white p-6 space-y-6">
-        <h2 className="text-2xl font-bold mb-8">🎓 School Admin</h2>
+        <h2 className="text-2xl font-bold mb-8">🎓 Union Admin</h2>
         <nav className="space-y-3">
           <a href="/dashboard/admin" className="block hover:text-blue-300">
             🏠 Dashboard

@@ -1,19 +1,9 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
-import { Editor } from '@tinymce/tinymce-react'
 import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 
 export default function CertificatesPage() {
   const [certificates, setCertificates] = useState([])
-   const [employees, setEmployees] = useState([])  
-const fetchEmployees = async () => {
-    const res = await fetch('/api/employees')
-    const data = await res.json()
-    if(data.success) setEmployees(data.employees)
-    else toast.error('Failed to load employees')
-  }
-  const today = new Date().toISOString().substring(0, 10);
   const [form, setForm] = useState({
     id: null,
     type: '',
@@ -22,7 +12,7 @@ const fetchEmployees = async () => {
     motherName: '',
     birthDate: '',
     address: '',
-    issuedDate: today,
+    issuedDate: '',
     notes: '',
   })
 
@@ -32,26 +22,14 @@ const fetchEmployees = async () => {
   const fetchCertificates = async () => {
     const res = await fetch('/api/certificates')
     const data = await res.json()
-    if (data.success) setCertificates(data.certificates)
+    if(data.success) setCertificates(data.certificates)
     else toast.error('Failed to load certificates')
   }
 
   useEffect(() => {
     fetchCertificates()
-    fetchEmployees()
   }, [])
- const signer = employees[0] || {
-    name: ' ',
-    designation: 'দায়িত্বপ্রাপ্ত কর্মকর্তা',
-    office1: '১নং রামগড় ইউনিয়ন পরিষদ',
-    office2: ' ',
-    office3: ' ',
-    office4: 'রামগড়, খাগড়াছড়ি',
-  }
 
-  const designationText = signer.designation === "OFFICER_IN_CHARGE"
-  ? 'দায়িত্বপ্রাপ্ত কর্মকর্তা'
-  : 'চেয়ারম্যান'
   const resetForm = () => {
     setForm({
       id: null,
@@ -78,7 +56,7 @@ const fetchEmployees = async () => {
         body: JSON.stringify(form),
       })
       const data = await res.json()
-      if (data.success) {
+      if(data.success) {
         toast.success(form.id ? 'Updated Successfully' : 'Added Successfully')
         resetForm()
         fetchCertificates()
@@ -91,10 +69,10 @@ const fetchEmployees = async () => {
   }
 
   const handleDelete = async (id) => {
-    if (!confirm('ডিলিট নিশ্চিত করবেন?')) return
+    if(!confirm('ডিলিট নিশ্চিত করবেন?')) return
     const res = await fetch(`/api/certificates?id=${id}`, { method: 'DELETE' })
     const data = await res.json()
-    if (data.success) {
+    if(data.success) {
       toast.success('Deleted Successfully')
       fetchCertificates()
     } else {
@@ -116,39 +94,48 @@ const fetchEmployees = async () => {
     })
   }
 
-  // Print function
+  // প্রিন্ট ফাংশন - শুধু নির্দিষ্ট সনদ প্রিন্ট করতে পারবে
   const handlePrint = (cert) => {
     const printContents = `
       <div style="padding: 30px; font-family: 'SolaimanLipi', sans-serif; line-height: 1.6; font-size: 16px;">
-        <div style="text-align: center; margin-bottom: 20px;">
-          <h2 style="margin: 0;">ইউপি প্রশাসকের কার্যালয়</h2>
-          <h3 style="margin: 0;">১নং রামগড় ইউনিয়ন পরিষদ</h3>
-          <h4 style="margin: 0;">রামগড়, খাগড়াছড়ি</h4>
-          <p style="margin: 5px 0; font-size: 14px;"> <u>www.ramgarhup.khagrachhari.gov.bd</u></p>
-        </div>
+  <!-- অফিস হেডিং -->
+  <div style="text-align: center; margin-bottom: 20px;">
+    <h2 style="margin: 0;">ইউপি প্রশাসকের কার্যালয়</h2>
+    <h3 style="margin: 0;">১নং রামগড় ইউনিয়ন পরিষদ</h3>
+    <h4 style="margin: 0;">রামগড়, খাগড়াছড়ি</h4>
+    <p style="margin: 5px 0; font-size: 14px;"> <u>www.ramgarhup.khagrachhari.gov.bd </u></p>
+    
+  </div>
 
-        <h2 style="text-align: center; text-decoration: underline; margin-bottom: 20px;">
-          ${cert.type}
-        </h2>
+  <!-- সনদের নাম -->
+  <h2 style="text-align: center; text-decoration: underline; margin-bottom: 20px;">
+    ${cert.type}
+  </h2>
 
-        <h4 style="margin-top: 10px;">স্মারক নং:  <span style="margin-left: 370px;">তারিখ:</span></h4>
-        <p><strong>আবেদনকারীর নাম:</strong> ${cert.applicantName}</p>
-        <p><strong>পিতার নাম:</strong> ${cert.fatherName || '-'}</p>
-        <p><strong>মাতার নাম:</strong> ${cert.motherName || '-'}</p>
-        <p><strong>জন্ম তারিখ:</strong> ${cert.birthDate ? cert.birthDate.substring(0,10) : '-'}</p>
-        <p><strong>ঠিকানা:</strong> ${cert.address || '-'}</p>
-        <p>${cert.notes || '-'}</p>
+  <!-- তথ্যসমূহ -->
+  <h4 style="margin-top: 10px;">স্মারক নং:  <span style="margin-left: 370px;">তারিখ:</span></h4>
+  <p><strong>আবেদনকারীর নাম:</strong> ${cert.applicantName}</p>
+  <p><strong>পিতার নাম:</strong> ${cert.fatherName || '-'}</p>
+  <p><strong>মাতার নাম:</strong> ${cert.motherName || '-'}</p>
+  <p><strong>জন্ম তারিখ:</strong> ${cert.birthDate ? cert.birthDate.substring(0,10) : '-'}</p>
+  <p><strong>ঠিকানা:</strong> ${cert.address || '-'}</p>
+   
+  <p>  ${cert.notes || '-'}</p>
 
-        <div style="margin-top: 150px; text-align: right;">
-         <div style="text-align: center; margin-left: 350px;">
-            <p style="margin: 0;">${signer.name}</p>
-           <p style="margin: 0;">${designationText}</p>
+  <!-- স্বাক্ষর -->
+  <div style="margin-top: 150px; text-align: right;">
+  <div style="  text-align: center;margin-left:350px">
+   
+    <p style="margin: 0;">রেহান উদ্দিন</p>
+    <p style="margin: 0;">দায়িত্বপ্রাপ্ত কর্মকর্তা</p>
+    <p style="margin: 0;">১নং রামগড় ইউনিয়ন পরিষদ</p>
+    <p style="margin: 0;">ও</p>
+    <p style="margin: 0;">উপজেলা আইসিটি অফিসার</p>
+    <p style="margin: 0;">রামগড়, খাগড়াছড়ি</p>
+  </div>
+  </div>
+</div>
 
-            <p style="margin: 0;">${signer.notes}</p>
-             
-          </div>
-        </div>
-      </div>
     `
     const newWin = window.open('', '', 'width=600,height=700')
     newWin.document.write(printContents)
@@ -168,7 +155,7 @@ const fetchEmployees = async () => {
           <select
             required
             value={form.type}
-            onChange={(e) => setForm({ ...form, type: e.target.value })}
+            onChange={e => setForm({ ...form, type: e.target.value })}
             className="border p-2 rounded w-full"
           >
             <option value="">-- সনদের ধরন নির্বাচন করুন --</option>
@@ -186,7 +173,7 @@ const fetchEmployees = async () => {
             type="text"
             required
             value={form.applicantName}
-            onChange={(e) => setForm({ ...form, applicantName: e.target.value })}
+            onChange={e => setForm({ ...form, applicantName: e.target.value })}
             className="border p-2 rounded w-full"
             placeholder="আবেদনকারীর নাম"
           />
@@ -197,7 +184,7 @@ const fetchEmployees = async () => {
           <input
             type="text"
             value={form.fatherName}
-            onChange={(e) => setForm({ ...form, fatherName: e.target.value })}
+            onChange={e => setForm({ ...form, fatherName: e.target.value })}
             className="border p-2 rounded w-full"
             placeholder="পিতার নাম (ঐচ্ছিক)"
           />
@@ -208,7 +195,7 @@ const fetchEmployees = async () => {
           <input
             type="text"
             value={form.motherName}
-            onChange={(e) => setForm({ ...form, motherName: e.target.value })}
+            onChange={e => setForm({ ...form, motherName: e.target.value })}
             className="border p-2 rounded w-full"
             placeholder="মাতার নাম (ঐচ্ছিক)"
           />
@@ -219,7 +206,7 @@ const fetchEmployees = async () => {
           <input
             type="date"
             value={form.birthDate}
-            onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
+            onChange={e => setForm({ ...form, birthDate: e.target.value })}
             className="border p-2 rounded w-full"
           />
         </div>
@@ -228,7 +215,7 @@ const fetchEmployees = async () => {
           <label className="font-semibold">ঠিকানা</label>
           <textarea
             value={form.address}
-            onChange={(e) => setForm({ ...form, address: e.target.value })}
+            onChange={e => setForm({ ...form, address: e.target.value })}
             className="border p-2 rounded w-full"
             placeholder="ঠিকানা"
             rows={2}
@@ -240,38 +227,25 @@ const fetchEmployees = async () => {
           <input
             type="date"
             value={form.issuedDate}
-            onChange={(e) => setForm({ ...form, issuedDate: e.target.value })}
+            onChange={e => setForm({ ...form, issuedDate: e.target.value })}
             className="border p-2 rounded w-full"
           />
         </div>
 
         <div>
           <label className="font-semibold">নোটস</label>
-          <Editor
-            apiKey="fg6rfz4onq5dx0irorid2gyjdbh9xdpg01k2kdcqk7594hd2" // Official free API key - change if you have your own
+          <textarea
             value={form.notes}
-            init={{
-              height: 200,
-              menubar: false,
-              directionality: 'ltr', // Left to Right writing direction
-              plugins: [
-                'advlist autolink lists link charmap preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste help wordcount',
-              ],
-              toolbar:
-                'undo redo | formatselect | bold italic underline | ' +
-                'alignleft aligncenter alignright alignjustify | ' +
-                'bullist numlist outdent indent | removeformat | help',
-            }}
-            onEditorChange={(content) => setForm({ ...form, notes: content })}
+            onChange={e => setForm({ ...form, notes: e.target.value })}
+            className="border p-2 rounded w-full"
+            placeholder="অতিরিক্ত তথ্য (ঐচ্ছিক)"
+            rows={2}
           />
         </div>
 
         <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
           {form.id ? 'আপডেট করুন' : 'সেভ করুন'}
         </button>
-
         {form.id && (
           <button
             type="button"
@@ -302,33 +276,23 @@ const fetchEmployees = async () => {
           <tbody>
             {certificates.length === 0 && (
               <tr>
-                <td colSpan={9} className="text-center p-4">
-                  কোনো সনদ পাওয়া যায়নি।
-                </td>
+                <td colSpan={9} className="text-center p-4">কোনো সনদ পাওয়া যায়নি।</td>
               </tr>
             )}
-            {certificates.map((cert) => (
+            {certificates.map(cert => (
               <tr key={cert.id}>
                 <td className="border p-2">{cert.type}</td>
                 <td className="border p-2">{cert.applicantName}</td>
                 <td className="border p-2">{cert.fatherName || '-'}</td>
                 <td className="border p-2">{cert.motherName || '-'}</td>
-                <td className="border p-2">{cert.birthDate ? cert.birthDate.substring(0, 10) : '-'}</td>
+                <td className="border p-2">{cert.birthDate ? cert.birthDate.substring(0,10) : '-'}</td>
                 <td className="border p-2">{cert.address || '-'}</td>
-                <td className="border p-2">{cert.issuedDate ? cert.issuedDate.substring(0, 10) : '-'}</td>
-                <td className="border p-2">
-                  <div dangerouslySetInnerHTML={{ __html: cert.notes || '-' }} />
-                </td>
+                <td className="border p-2">{cert.issuedDate ? cert.issuedDate.substring(0,10) : '-'}</td>
+                <td className="border p-2">{cert.notes || '-'}</td>
                 <td className="border p-2 space-x-1">
-                  <button onClick={() => handleEdit(cert)} className="text-blue-600">
-                    ✏️
-                  </button>
-                  <button onClick={() => handleDelete(cert.id)} className="text-red-600">
-                    🗑
-                  </button>
-                  <button onClick={() => handlePrint(cert)} className="text-green-600">
-                    🖨️
-                  </button>
+                  <button onClick={() => handleEdit(cert)} className="text-blue-600">✏️</button>
+                  <button onClick={() => handleDelete(cert.id)} className="text-red-600">🗑</button>
+                  <button onClick={() => handlePrint(cert)} className="text-green-600">🖨️</button>
                 </td>
               </tr>
             ))}

@@ -116,3 +116,20 @@ model Certificate {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+model Employees {
+  id          Int      @id @default(autoincrement())
+  name        String      
+  mobile  String?   
+  email  String?   
+  notes       String?   @db.Text 
+  order  Int @default(1)
+  designation  Designation     @default(CHAIRMAN)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+enum Designation {
+  OFFICER_IN_CHARGE
+  CHAIRMAN
+  ADMINISTRATIVE_OFFICER
+  ACCOUNTANT_COMPUTER_OPERATOR
+}
