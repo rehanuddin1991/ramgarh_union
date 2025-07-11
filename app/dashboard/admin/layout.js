@@ -19,20 +19,13 @@ export default function AdminLayout({ children }) {
             🏠 Dashboard
           </a>
 
-          <div className="space-y-1">
-            <p className="font-semibold text-white">👨‍🎓 Students</p>
-            <div className="ml-4 space-y-1 text-sm">
-              <a href="/dashboard/admin/students" className="block hover:text-blue-300">
-                🧾 Create Student
-              </a>
-            </div>
-          </div>
+           
 
           <div className="space-y-1">
             <p className="font-semibold text-white">👨‍🎓 User</p>
             <div className="ml-4 space-y-1 text-sm">
               <a href="/dashboard/admin/user-creation" className="block hover:text-blue-300">
-                🧾 Create User
+                🧾  User Management
               </a>
             </div>
           </div>
@@ -41,15 +34,16 @@ export default function AdminLayout({ children }) {
               👷‍♂️ Employee Management
           </a>
 
-          <a href="/dashboard/admin/attendance" className="block hover:text-blue-300">
-            📋 Attendance
+          <a href="/dashboard/admin/holding_information" className="block hover:text-blue-300">
+            📋 Holding Tax Information
           </a>
-          <a href="/dashboard/admin/fee" className="block hover:text-blue-300">
-            💰 Fee
+          <a href="/dashboard/admin/holding_collection" className="block hover:text-blue-300">
+            📋 Holding Tax Collection
           </a>
-          <a href="/dashboard/admin/result" className="block hover:text-blue-300">
-            📝 Results
+          <a href="/dashboard/admin/certificates" className="block hover:text-blue-300">
+            📜  সকল সনদ
           </a>
+           
           <a href="/dashboard/admin/settings" className="block hover:text-blue-300">
             ⚙️ Settings
           </a>

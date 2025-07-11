@@ -11,7 +11,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const method = editingId ? 'PUT' : 'POST'
+    const method = editingId ? 'PATCH' : 'POST'
     const url = editingId ? `/api/register?id=${editingId}` : '/api/register'
 
     try {

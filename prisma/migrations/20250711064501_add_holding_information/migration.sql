@@ -1,0 +1,32 @@
+-- CreateTable
+CREATE TABLE `Holding_Information` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `headName` VARCHAR(191) NOT NULL,
+    `ward` INTEGER NOT NULL,
+    `holdingNo` VARCHAR(191) NOT NULL,
+    `father` VARCHAR(191) NOT NULL,
+    `mother` VARCHAR(191) NOT NULL,
+    `nid` VARCHAR(191) NOT NULL,
+    `mobile` VARCHAR(191) NOT NULL,
+    `dob` DATETIME(3) NOT NULL,
+    `gender` ENUM('MALE', 'FEMALE', 'OTHER') NOT NULL DEFAULT 'MALE',
+    `occupation` VARCHAR(191) NOT NULL,
+    `maleMembers` INTEGER NOT NULL,
+    `femaleMembers` INTEGER NOT NULL,
+    `othersMembers` INTEGER NOT NULL,
+    `maleBaby` INTEGER NOT NULL,
+    `femaleBaby` INTEGER NOT NULL,
+    `othersBaby` INTEGER NOT NULL,
+    `address` VARCHAR(191) NOT NULL,
+    `area` VARCHAR(191) NOT NULL,
+    `multiStoriedRoom` INTEGER NOT NULL,
+    `buildingRoom` INTEGER NOT NULL,
+    `semiBuildingRoom` INTEGER NOT NULL,
+    `ownHouseRent` INTEGER NOT NULL,
+    `othersRent` INTEGER NOT NULL,
+    `imposedTax` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
